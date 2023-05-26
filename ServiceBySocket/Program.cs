@@ -56,61 +56,42 @@ async Task ProcessClientAsync(TcpClient tcpClient)
 
         var word = Encoding.UTF8.GetString(response.ToArray());
         console.WriteMessage($"Получено сообщение: {word}");
-        
-        //switch (word) {
-        //    case "END":
-        //        console.Warning($"Клиент: {tcpClient.Client.RemoteEndPoint} завершил работу");
-        //        break;
-        //    case "car":
-        //        console.WriteMessage($"Запрос получения авто по id. Клиент: {tcpClient.Client.RemoteEndPoint}");
-        //        var car = _carService.GetCarById(word).ToString();
 
-        //        car += '\n';
+        switch (word)
+        {
+            case "END":
+                console.Warning($"Клиент: {tcpClient.Client.RemoteEndPoint} завершил работу");
+                break;
+            case "car":
+                console.WriteMessage($"Запрос получения авто по id. Клиент: {tcpClient.Client.RemoteEndPoint}");
+                var car = _carService.GetCarById(word).ToString();
 
-        //        await stream.WriteAsync(Encoding.UTF8.GetBytes(car));
-        //        response.Clear();
-        //        break;
-        //    case "cars":
-        //        console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
-        //        var cars = _carService.GetAllCart().ToString();
+                car += '\n';
 
-        //        cars += '\n';
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(car));
+                response.Clear();
+                break;
+            case "cars":
+                console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
+                var cars = _carService.GetAllCart().ToString();
 
-        //        await stream.WriteAsync(Encoding.UTF8.GetBytes(cars));
-        //        response.Clear();
-        //        break;
-        //    default:
-        //        console.Warning($"Сообщение от клиента: {tcpClient.Client.RemoteEndPoint} не распознано");
-        //        break;
-        //}
-            
+                cars += '\n';
+
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(cars));
+                response.Clear();
+                break;
+            default:
+                console.Warning($"Сообщение от клиента: {tcpClient.Client.RemoteEndPoint} не распознано");
+                break;
+        }
+
 
         // если прислан маркер окончания взаимодействия,
         // выходим из цикла и завершаем взаимодействие с клиентом
-        if (word == "END") break;
-        console.Warning($"Клиент: {tcpClient.Client.RemoteEndPoint} завершил работу");
-
-
-        if (word == "car")
+        if (word == "END")
         {
-            console.WriteMessage($"Запрос получения авто по id. Клиент: {tcpClient.Client.RemoteEndPoint}");
-            var car = _carService.GetCarById(word).ToString();
-
-            car += '\n';
-
-            await stream.WriteAsync(Encoding.UTF8.GetBytes(car));
-            response.Clear();
-        }
-
-        if (word == "cars")
-        {
-            console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
-            var cars = _carService.GetAllCars().ToString();
-
-            cars += '\n';
-
-            await stream.WriteAsync(Encoding.UTF8.GetBytes(cars));
-            response.Clear();
+            console.Warning($"Клиент: {tcpClient.Client.RemoteEndPoint} завершил работу");
+            break;
         }
 
         response.Clear();
