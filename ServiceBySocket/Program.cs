@@ -1,8 +1,8 @@
-﻿using ServiceBySocket.Extensions;
-using ServiceBySocket.Services;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using ServiceBySocket.Extensions;
+using ServiceBySocket.Services;
 
 //Консольное расширение для разного цвета
 var console = new WriteConsoleExtend();
@@ -16,32 +16,32 @@ var _carService = new CarService();
 
 try
 {
-	tcpListener.Start();
-	console.WriteMessage($"Сервер запущен. Адресс: {ipAddress.ToString()}");
+    tcpListener.Start();
+    console.WriteMessage($"Сервер запущен. Адресс: {ipAddress.ToString()}");
 
-	while (true)
-	{
-		var tcpClient = await tcpListener.AcceptTcpClientAsync();
-		console.WriteMessage($"Клиент подключен: {tcpClient.Client.RemoteEndPoint}");
+    while (true)
+    {
+        var tcpClient = await tcpListener.AcceptTcpClientAsync();
+        console.WriteMessage($"Клиент подключен: {tcpClient.Client.RemoteEndPoint}");
 
-		Task.Run(async () =>
-		{
-			await ProcessClientAsync(tcpClient);
-		});
-	}
+        Task.Run(async () =>
+        {
+            await ProcessClientAsync(tcpClient);
+        });
+    }
 }
 catch (Exception e)
 {
-	console.Error(e.Message);
+    console.Error(e.Message);
 }
 finally
 {
-	tcpListener.Stop();
+    tcpListener.Stop();
 }
 
 async Task ProcessClientAsync(TcpClient tcpClient)
 {
-	var stream = tcpClient.GetStream();
+    var stream = tcpClient.GetStream();
 
     var response = new List<byte>();
     int bytesRead = 10;
@@ -64,11 +64,12 @@ async Task ProcessClientAsync(TcpClient tcpClient)
                 break;
             case "cars":
                 console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
-                var cars = _carService.GetAllCart().ToString();
+                var cars = _carService.GetAllCart();
+                var answer = cars.ToString();
 
-                cars += '\n';
+                answer += '\n';
 
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(cars));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(answer));
                 response.Clear();
                 break;
         }

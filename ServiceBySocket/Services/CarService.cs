@@ -8,13 +8,13 @@ namespace ServiceBySocket.Services
         {
         }
 
-        public List<Car> GetAllCart()
+        public Cars GetAllCart()
         {
-            var result = new List<Car>();
+            var result = new Cars { ListCars = new List<Car>() };
 
             for (int i = 0; i < 10; i++)
             {
-                result.Add(GetGenericCar());
+                result.ListCars.Add(GetGenericCar());
             }
 
             return result;
@@ -40,6 +40,6 @@ namespace ServiceBySocket.Services
             return car;
         }
 
-        
+
     }
 }
