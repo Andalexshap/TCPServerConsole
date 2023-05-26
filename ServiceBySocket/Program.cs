@@ -105,7 +105,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
         if (word == "cars")
         {
             console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
-            var cars = _carService.GetAllCart().ToString();
+            var cars = _carService.GetAllCars().ToString();
 
             cars += '\n';
 

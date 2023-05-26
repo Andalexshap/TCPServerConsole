@@ -8,34 +8,48 @@ namespace ServiceBySocket.Services
         {
         }
 
-        public List<Car> GetAllCart()
+        public Cars GetAllCars()
         {
-            var result = new List<Car>();
+            var result = new Cars();
 
-            for (int i = 0; i < 10; i++)
+            using (var dbcontext = new Context())
             {
-                result.Add(GetGenericCar());
+                try
+                {
+                    result.ListCars = dbcontext.Сars.ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка получения записей. {ex}");
+                    throw;
+                }
             }
 
             return result;
         }
 
-        public Car GetCarById(string id)
+        public async Task<Cars> GetCarById(string id)
         {
-            return GetGenericCar();
+            var cars = new Cars();
+            Car car = new Car();
+
+            using (var dbcontext = new Context())
+            {
+                try
+                {
+                    car = dbcontext.Сars.FirstOrDefault(x => x.Id.ToString().Equals(id));
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка получения записи по ID. {id}, {ex}");
+                    throw;
+                }
+
+                cars.ListCars = new List<Car> { car };
+            }
+            return cars;
         }
-
-        private Car GetGenericCar()
-        {
-            var car = new Car();
-            var random = new Random();
-
-            car.Year = random.Next();
-            car.DoorsCount = random.Next();
-
-            return car;
-        }
-
-        
     }
 }
