@@ -1,20 +1,31 @@
-﻿using ServiceBySocket.Models;
+﻿using ServiceBySocket.Extensions;
+using ServiceBySocket.Models;
 
 namespace ServiceBySocket.Services
 {
     public class CarService
     {
+        private readonly WriteConsoleExtend console;
         public CarService()
         {
+            console = new WriteConsoleExtend();
         }
 
         public Cars GetAllCart()
         {
-            var result = new Cars { ListCars = new List<Car>() };
+            var result = new Cars();
 
-            for (int i = 0; i < 10; i++)
+            using (var dbcontext = new Context())
             {
-                result.ListCars.Add(GetGenericCar());
+                try
+                {
+                    result.ListCars = dbcontext.Сars.ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    console.Error($"Ошибка получения записей. {ex.Message}");
+                }
             }
 
             return result;
@@ -22,7 +33,22 @@ namespace ServiceBySocket.Services
 
         public Car GetCarById(string id)
         {
-            return GetGenericCar();
+            Car car = new Car();
+
+            using (var dbcontext = new Context())
+            {
+                try
+                {
+                    car = dbcontext.Сars.FirstOrDefault(x => x.Id.ToString().Equals(id));
+
+                }
+                catch (Exception ex)
+                {
+                    console.Error($"Ошибка получения записи по ID. {id}, {ex.Message}");
+                    throw;
+                }
+            }
+            return car;
         }
 
         private Car GetGenericCar()
