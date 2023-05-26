@@ -11,8 +11,11 @@
 
         public override string ToString()
         {
-            //тут должно быть раскладывание в строку объекта
-            return base.ToString();
+            return $"Производитель: {Manufacturer};" +
+                  $"Модель: {Model};" +
+                  $"Год: {Year};" +
+                  $"Объем: {EngineCapacity};" +
+                  $"Кол-во дверей: {DoorsCount};";
         }
     }
 }

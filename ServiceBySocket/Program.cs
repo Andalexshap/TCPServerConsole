@@ -62,15 +62,6 @@ async Task ProcessClientAsync(TcpClient tcpClient)
             case "END":
                 console.Warning($"Клиент: {tcpClient.Client.RemoteEndPoint} завершил работу");
                 break;
-            case "car":
-                console.WriteMessage($"Запрос получения авто по id. Клиент: {tcpClient.Client.RemoteEndPoint}");
-                var car = _carService.GetCarById(word).ToString();
-
-                car += '\n';
-
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(car));
-                response.Clear();
-                break;
             case "cars":
                 console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
                 var cars = _carService.GetAllCart().ToString();
@@ -80,11 +71,21 @@ async Task ProcessClientAsync(TcpClient tcpClient)
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(cars));
                 response.Clear();
                 break;
-            default:
-                console.Warning($"Сообщение от клиента: {tcpClient.Client.RemoteEndPoint} не распознано");
-                break;
         }
 
+        if (word.StartsWith("car:"))
+        {
+            var id = word.Split(':')[1];
+            console.WriteMessage($"Запрос получения авто по id: {id}. Клиент: {tcpClient.Client.RemoteEndPoint}");
+            var car = _carService.GetCarById(id);
+
+            var answer = car.ToString();
+
+            answer += '\n';
+
+            await stream.WriteAsync(Encoding.UTF8.GetBytes(answer));
+            response.Clear();
+        }
 
         // если прислан маркер окончания взаимодействия,
         // выходим из цикла и завершаем взаимодействие с клиентом
