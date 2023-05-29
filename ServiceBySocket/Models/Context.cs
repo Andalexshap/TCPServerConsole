@@ -12,7 +12,7 @@ namespace ServiceBySocket.Models
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=MirtekCar;Username=admin;Password=admin");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=mirtekcar;Username=admin;Password=admin");
         }
     }
 }
