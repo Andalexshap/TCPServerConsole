@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 using ServiceBySocket.Extensions;
+using ServiceBySocket.Models;
 using ServiceBySocket.Services;
 
 //Консольное расширение для разного цвета
@@ -13,6 +14,16 @@ var ipAddress = new IPAddress(new byte[] { 127, 0, 0, 1 });
 var tcpListener = new TcpListener(ipAddress, 8888);
 
 var _carService = new CarService();
+
+var car = new Car
+{
+    Model = "Nissan",
+    
+    DoorsCount = 0
+};
+var stringCar = car.ConvertToHexForSend();
+
+
 
 try
 {

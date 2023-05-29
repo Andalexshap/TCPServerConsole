@@ -56,9 +56,8 @@ namespace ServiceBySocket.Services
             var car = new Car
             {
                 Id = Guid.NewGuid(),
-                Manufacturer = "NISSAN",
                 Model = "nISSAN",
-                EngineCapacity = 1.8M,
+                EngineCapacity = 1.8F,
                 DoorsCount = 0,
                 Year = 2050
             };
