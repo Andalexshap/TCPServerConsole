@@ -8,7 +8,7 @@ namespace ServiceBySocket.Models
         public Guid Id { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
-        public double EngineCapacity { get; set; }
+        public float EngineCapacity { get; set; }
         public int DoorsCount { get; set; }
 
         public override string ToString()
@@ -90,17 +90,19 @@ namespace ServiceBySocket.Models
 
         private string EngineCapacityToHex()
         {
-            var engineCapacity = BitConverter.DoubleToInt64Bits(EngineCapacity).ToString("X");
+            var result = " 0x13";
+            byte[] bytes = BitConverter.GetBytes(EngineCapacity);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+            }
 
-            string result = $" 0x13 0x3F";
-
-            foreach (byte b in engineCapacity)
+            foreach (byte b in bytes)
             {
                 result += " 0x" + b.ToString("X2");
             }
-            Console.WriteLine(result);
 
-            return " 0x0" + engineCapacity[0] + " 0x" + engineCapacity[1] + engineCapacity[2];            
+            return result;
         }
 
         private string DoorsCountToHex() => " 0x12 0x0" + Convert.ToString(DoorsCount, 16);

@@ -15,15 +15,36 @@ var tcpListener = new TcpListener(ipAddress, 8888);
 
 var _carService = new CarService();
 
-var car = new Car
+var carList = new Cars
+{ListCars = new List<Car>{
+    new Car
 {
     Model = "Nissan",
-    
-    DoorsCount = 0
+    EngineCapacity = 1.6F,
+    Year = 2008,
+    DoorsCount = 4
+},
+    new Car
+{
+    Model = "Nexia",
+    EngineCapacity = 1.8F,
+    Year = 2010,
+    DoorsCount = 3
+} }
 };
-var stringCar = car.ConvertToHexForSend();
 
 
+var b = carList.ConvertToHexForSend();
+
+
+
+byte[] bytes = new byte[] { 0x3F, 0xCC, 0xCC, 0xCD }; // Big endian data
+if (BitConverter.IsLittleEndian)
+{
+    Array.Reverse(bytes); // Convert big endian to little endian
+}
+float myFloat = BitConverter.ToSingle(bytes, 0);
+Console.WriteLine(myFloat);  //=> 1,6
 
 try
 {
@@ -76,7 +97,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
             case "cars":
                 console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
                 var cars = _carService.GetAllCart();
-                var answer = cars.ToString();
+                var answer = cars.ConvertToHexForSend();
 
                 answer += '\n';
 
@@ -91,7 +112,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
             console.WriteMessage($"Запрос получения авто по id: {id}. Клиент: {tcpClient.Client.RemoteEndPoint}");
             var car = _carService.GetCarById(id);
 
-            var answer = car.ToString();
+            var answer = car.ConvertToHexForSend();
 
             answer += '\n';
 
