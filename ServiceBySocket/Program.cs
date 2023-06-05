@@ -66,11 +66,11 @@ async Task ProcessClientAsync(TcpClient tcpClient)
             case "cars":
                 console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
                 var cars = _carService.GetAllCart();
-                var answer = cars.ConvertToHexForSend();
+                var answer = cars.ConvertCarsToByteForSend();
 
-                answer += '\n';
+                answer.Add(0x00);
 
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(answer));
+                await stream.WriteAsync(answer.ToArray());
                 response.Clear();
                 break;
         }
@@ -81,11 +81,11 @@ async Task ProcessClientAsync(TcpClient tcpClient)
             console.WriteMessage($"Запрос получения авто по id: {id}. Клиент: {tcpClient.Client.RemoteEndPoint}");
             var car = _carService.GetCarById(id);
 
-            var answer = car.ConvertToHexForSend();
+            var answer = car.ConvertCarToByteForSend();
 
-            answer += '\n';
+            answer.Add(0x00);
 
-            await stream.WriteAsync(Encoding.UTF8.GetBytes(answer));
+            await stream.WriteAsync(answer.ToArray());
             response.Clear();
         }
 
