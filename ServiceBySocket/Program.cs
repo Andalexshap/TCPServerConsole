@@ -68,7 +68,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
                 var cars = GetSomeCars();//_carService.GetAllCart();
                 var answer = cars.ConvertCarsToByteForSend();
 
-                answer.Add(0x00);
+                answer.Add(0x10);
 
                 await stream.WriteAsync(answer.ToArray());
                 response.Clear();
@@ -79,11 +79,11 @@ async Task ProcessClientAsync(TcpClient tcpClient)
         {
             var id = word.Split(':')[1];
             console.WriteMessage($"Запрос получения авто по id: {id}. Клиент: {tcpClient.Client.RemoteEndPoint}");
-            var car = GetOneCar(2); //_carService.GetCarById(id);
+            var car = GetOneCar(0); //_carService.GetCarById(id);
 
             var answer = car.ConvertCarToByteForSend();
 
-            answer.Add(0x00);
+            answer.Add(0x10);
 
             await stream.WriteAsync(answer.ToArray());
             response.Clear();
