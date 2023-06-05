@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
-using ServiceBySocket.Helpers;
+﻿using ServiceBySocket.Helpers;
 
 namespace ServiceBySocket.Models
 {
@@ -8,19 +6,19 @@ namespace ServiceBySocket.Models
     {
         public Guid Id { get; set; }
         public string Model { get; set; }
-        public int Year { get; set; }
+        public ushort Year { get; set; }
         public float EngineCapacity { get; set; }
-        public int DoorsCount { get; set; }
+        public ushort DoorsCount { get; set; }
 
         public override string ToString()
         {
-            return  $"Модель: {Model};" +
+            return $"Модель: {Model};" +
                     $"Год: {Year};" +
                     $"Объем: {EngineCapacity};" +
                     $"Кол-во дверей: {DoorsCount};";
         }
 
-        public List<byte> ConvertCarToByteForSend() 
+        public List<byte> ConvertCarToByteForSend()
             => BinarySerializer.Serialize(this);
     }
 }

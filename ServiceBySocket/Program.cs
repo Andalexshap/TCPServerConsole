@@ -65,7 +65,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
                 break;
             case "cars":
                 console.WriteMessage($"Запрос получения всех авто. Клиент: {tcpClient.Client.RemoteEndPoint}");
-                var cars = _carService.GetAllCart();
+                var cars = GetSomeCars();//_carService.GetAllCart();
                 var answer = cars.ConvertCarsToByteForSend();
 
                 answer.Add(0x00);
@@ -79,7 +79,7 @@ async Task ProcessClientAsync(TcpClient tcpClient)
         {
             var id = word.Split(':')[1];
             console.WriteMessage($"Запрос получения авто по id: {id}. Клиент: {tcpClient.Client.RemoteEndPoint}");
-            var car = _carService.GetCarById(id);
+            var car = GetOneCar(2); //_carService.GetCarById(id);
 
             var answer = car.ConvertCarToByteForSend();
 
@@ -101,3 +101,50 @@ async Task ProcessClientAsync(TcpClient tcpClient)
     }
     tcpClient.Close();
 }
+
+Cars GetSomeCars()
+{
+    var cars = new Cars
+    {
+        ListCars = new List<Car>()
+    };
+
+    cars.ListCars.Add(GetOneCar(1));
+    cars.ListCars.Add(GetOneCar(2));
+
+    return cars;
+}
+
+Car GetOneCar(int count)
+{
+    var firstCar = new Car
+    {
+        Id = Guid.NewGuid(),
+        Model = "Mazda",
+        Year = 2007,
+        DoorsCount = 5,
+        EngineCapacity = 2.0F
+    };
+
+    var secondCar = new Car
+    {
+        Id = Guid.NewGuid(),
+        Model = "Nissan",
+        Year = 2008,
+        EngineCapacity = 1.6F
+    };
+
+    var thirdCar = new Car();
+
+    switch (count)
+    {
+        case 0: return thirdCar;
+        case 1: return firstCar;
+        case 2: return secondCar;
+        default:
+            break;
+    }
+    return thirdCar;
+}
+
+

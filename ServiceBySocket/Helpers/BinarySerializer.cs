@@ -1,11 +1,6 @@
-﻿using System;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
+﻿using System.Buffers.Binary;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using ServiceBySocket.Models;
 
 namespace ServiceBySocket.Helpers
@@ -24,7 +19,6 @@ namespace ServiceBySocket.Helpers
             if (car.EngineCapacity != 0) counterProperties++;
             if (car.DoorsCount != 0) counterProperties++;
 
-            //TODO: Переделать получение количества свойств
             bytes.Add((byte)counterProperties);
 
             foreach (var prop in properties)
@@ -65,7 +59,8 @@ namespace ServiceBySocket.Helpers
 
         private static void WriteUInt16(ushort number, List<byte> result)
         {
-            result.Add(0x12);
+            if (number > 10) result.Add(0x12);
+            else result.Add(0x14);
             byte[] buffer = new byte[sizeof(ushort)];
             BinaryPrimitives.WriteUInt16BigEndian(buffer, number);
             result.AddRange(buffer);
